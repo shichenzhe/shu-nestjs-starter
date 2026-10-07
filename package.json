@@ -31,6 +31,7 @@
     "prisma:reset": "prisma generate && prisma db push && ts-node prisma/seed.ts"
   },
   "dependencies": {
+    "@fastify/static": "^10.1.5",
     "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
@@ -50,6 +51,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "compression": "^1.8.1",
+    "cross-env": "^10.0.0",
     "fastify": "^5.4.0",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
@@ -63,8 +65,7 @@
     "rxjs": "^7.8.1",
     "uuid": "^11.1.0",
     "winston": "^3.17.0",
-    "winston-daily-rotate-file": "^5.0.0",
-    "cross-env": "^10.0.0"
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
