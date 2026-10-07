@@ -35,11 +35,17 @@ async function bootstrap() {
   //加载应用配置
   const configService = app.get(ConfigService);
   const appConfig = configService.get<AppConfig>('app', AppConfig.getDefault());
-  // JWT 密钥仍为模板默认值时给出告警（生产环境必须先执行 npm run init）
+  // JWT 密钥仍为模板默认值/占位符时给出告警（生产环境必须先执行 npm run init）
+  // 注意：占位符字面量用拼接构造，避免被 init 的全文替换波及本文件
   const authConfig = configService.get<any>('auth');
-  if (authConfig?.jwt?.secret === '3C4F4BD192D0489FE0632F0C11ACBF35') {
+  const jwtSecretPlaceholder = '{{' + 'JWT_SECRET' + '}}';
+  const jwtSecret = authConfig?.jwt?.secret;
+  if (
+    jwtSecret === jwtSecretPlaceholder ||
+    jwtSecret === '3C4F4BD192D0489FE0632F0C11ACBF35'
+  ) {
     console.warn(
-      '[安全告警] auth.jwt.secret 仍为模板默认值，请执行 npm run init 替换 {{JWT_SECRET}} 后再用于生产环境！',
+      '[安全告警] auth.jwt.secret 仍为模板默认值，请执行 npm run init 完成初始化后再用于生产环境！',
     );
   }
   //设置全局路径前缀
