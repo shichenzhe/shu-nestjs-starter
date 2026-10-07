@@ -1,0 +1,112 @@
+# 服务配置
+app:
+  # 服务配置
+  port: 3000
+  # 上下文路径
+  contextPath: /
+  # 应用名称
+  name: main
+  # 压缩配置
+  compression:
+    enabled: true
+    threshold: 2048
+    level: 1
+    memLevel: 8
+
+# 数据库配置
+database:
+  url: 'file:./local.db' # SQLite 示例
+
+# 监控配置
+management:
+  # 健康检查
+  health:
+    diskSpace:
+      enabled: true
+      thresholdPercent: 0.9
+    memory:
+      enabled: true
+      thresholdPercent: 0.95
+  timeout: 5000
+  # 指标配置
+  metrics:
+    enabled: true
+    enable:
+      # 启用各类指标收集
+      system: true
+      http: true
+      process: true
+      datasource: true
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+      percentiles:
+        http.server.requests: 0.5,0.95,0.99
+      slo:
+        http.server.requests: 10ms,50ms,100ms,200ms,500ms,1s,2s,5s
+    tags:
+      application: demo
+      service: backend
+      version: 1.0.0
+  # 安全配置
+  security:
+    enabled: false # 是否启用安全控制
+    requireAuth: false # 是否需要认证
+    allowedIps: # 允许访问的IP地址（支持CIDR格式）
+      - '127.0.0.1'
+      - '::1'
+      - '192.168.1.0/24' # 示例：局域网段
+    tokens: # 允许的Bearer tokens
+      - 'your-secret-token-here'
+    users: # Basic认证用户
+      - username: 'admin'
+        password: 'admin123'
+        roles: ['ACTUATOR_ADMIN']
+      - username: 'monitor'
+        password: 'monitor123'
+
+# 接口文档
+swagger:
+  enabled: true
+  path: /api-docs
+  title: Demo API
+  description: Demo API Documentation
+  version: 1.0.0
+
+# 响应配置
+response:
+  # 不需要统一响应包装的接口路径
+  excludePaths:
+    - /actuator/health
+    - /actuator/metrics
+    - /actuator/metrics/config
+    - /actuator/metrics/reset
+
+# 日志配置
+log:
+  level: info
+  dir: ./logs
+  maxSize: 50MB
+  maxFiles: 10
+  maxDays: 7
+  datePattern: YYYY-MM-DD
+  format: YYYY-MM-DD HH:mm:ss,SSS
+  pattern: '%d [%t] [%trace_id] %-5p %c - %m%n'
+
+# 认证配置
+auth:
+  global: true
+  defaultStrategy: jwt
+  jwt:
+    secret: '3C4F4BD192D0489FE0632F0C11ACBF35'
+    expiresIn: '30m'
+    refreshExpiresIn: '12h'
+
+  basic:
+    users:
+      - username: 'guest'
+        password: 'guest'
+      - username: 'user'
+        password: 'user123'
+        roles: ['user']
+  oauth2:
