@@ -76,6 +76,6 @@ export class NoteController {
 - 新建 `src/modules/note/note.module.ts`（参考 user.module.ts，注册 controller/providers、导入 PrismaModule）
 - `src/app.module.ts` 的 imports 追加 `NoteModule`
 
-（可选）需要记录操作日志的接口，在 controller 方法上参考 user 模块使用操作日志标注。
+（可选）操作日志为全局拦截器（`OperationLogInterceptor`，已在 app.module 全局注册），源工程以开关方式禁用——当前 `src/modules/operationlog/operation-log.interceptor.ts` 中 `DISABLE_LOG = true`，任何接口都不会落库。需要开启时，把该开关改为 `false` 即可自动记录接口调用（用户/IP/耗时/状态）；个别接口如需跳过记录，可用 `@SkipOperationLog()` 装饰器标注。
 
 完成。删模块 = 反向删除这七步产物。

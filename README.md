@@ -11,12 +11,12 @@
 - **登录认证**：JWT 访问/刷新双令牌 + Basic 认证 + 角色守卫（`@Roles`）
 - **统一 Web 层**：响应包装、业务异常 + 错误码、请求日志（trace_id 贯穿）、JSON 序列化拦截
 - **接口文档**：Swagger UI 开箱即用（`/api-docs`），JWT/Bearer 调试直接可用
-- **管理端点**：actuator 风格 `/actuator/health`（磁盘/内存检查）与 `/actuator/metrics`（prometheus 指标）
+- **管理端点**：actuator 风格 `/actuator/health`（磁盘/内存检查）、`/actuator/prometheus`（Prometheus 抓取用，text/plain）与 `/actuator/metrics`（JSON 包裹的指标查看）
 - **通用查询**：query-filter 声明式列表过滤（分页/关键字/字段过滤）
 - **数据库**：Prisma + SQLite 默认（零依赖启动），附 PostgreSQL 切换支持
-- **操作日志**：拦截器自动记录接口调用（用户/IP/耗时/状态）
+- **操作日志**：拦截器框架就绪（用户/IP/耗时/状态），源工程以开关方式禁用，按需开启
 - **日志**：Winston 按日轮转，trace_id 关联请求
-- **部署**：多阶段 Dockerfile、优雅关闭、gzip 压缩
+- **部署**：多阶段 Dockerfile、gzip 压缩
 
 ## 技术栈
 
@@ -47,7 +47,8 @@ npm run start:dev
 
 - Swagger 文档：http://localhost:3000/api-docs
 - 健康检查：http://localhost:3000/actuator/health
-- Prometheus 指标：http://localhost:3000/actuator/metrics
+- Prometheus 抓取端点（text/plain）：http://localhost:3000/actuator/prometheus
+- 指标查看（JSON 包裹 prometheus 文本）：http://localhost:3000/actuator/metrics
 - 登录：`POST /auth/login`（`{"username":"admin","password":"123456"}`）
 
 **添加你的第一个业务模块** → [docs/guide.md](docs/guide.md)
@@ -55,10 +56,12 @@ npm run start:dev
 ## 目录结构
 
 ```
+├── Dockerfile         # 多阶段构建
+├── docs/              # 开发文档（guide.md 业务模块开发指南）
 ├── prisma/            # schema（sqlite 默认 + postgresql 变体）与 seed
 ├── scripts/init.mjs   # 交互式初始化（占位符替换）
 ├── src/
-│   ├── commons/       # 通用层：auth / config / database / log / web / query / entity / exception
+│   ├── commons/       # 通用层：auth / codec / config / database / entity / exception / log / query / util / web
 │   ├── config/        # config.yml 应用配置（端口/数据库/日志/监控/认证）
 │   └── modules/       # 业务模块：controller + service + repository + entity + dto
 └── test/              # Jest 单测
@@ -67,8 +70,12 @@ npm run start:dev
 ## 切换 PostgreSQL
 
 1. `cp prisma/schema.prisma.postgresql prisma/schema.prisma`
-2. 设置 `DATABASE_URL` 环境变量为 postgres 连接串（如 `export DATABASE_URL="postgresql://user:pass@host:5432/db"`，或写入 `.env` 文件）
-3. `npx prisma generate && npm run prisma:deploy`
+2. 修改 `src/config/config.yml` 的 `database.url` 为 postgres 连接串
+   （如 `postgresql://user:pass@host:5432/db`）。运行时以 config.yml 为准，
+   仅设置 `DATABASE_URL` 环境变量会被它覆盖而不生效
+3. Prisma CLI（migrate/deploy）另需 `DATABASE_URL` 环境变量：
+   `export DATABASE_URL="postgresql://user:pass@host:5432/db"`，或写入 `.env` 文件
+4. `npx prisma generate && npm run prisma:deploy`
 
 ## 配置
 

@@ -29,7 +29,7 @@ npm run prisma:deploy     # 迁移（生产）
 npm run prisma:studio     # 数据库 GUI
 ```
 
-启动地址：http://localhost:3000，Swagger：/api-docs，管理端点：/actuator/health、/actuator/metrics
+启动地址：http://localhost:3000，Swagger：/api-docs，管理端点：/actuator/health、/actuator/metrics（JSON 包裹）、/actuator/prometheus（Prometheus 抓取用）
 
 ## 代码架构
 
@@ -37,6 +37,7 @@ npm run prisma:studio     # 数据库 GUI
 
 - **src/commons/** - 通用层（与业务无关，新项目直接复用）
   - `auth/` - JWT+Basic 双认证：strategy / guard / decorator（`@Public` `@JwtAuth` `@Roles` `@AccessContext`）/ JwtAuthService
+  - `codec/` - JSON 序列化编解码（JsonDateTime 装饰器等）
   - `config/` - config.yml 加载（configuration.ts）与各段配置实体
   - `database/` - PrismaModule/PrismaService
   - `log/` - Winston 按日轮转日志工厂
@@ -44,13 +45,16 @@ npm run prisma:studio     # 数据库 GUI
   - `query/` - QueryFilter/QueryResult 通用列表查询
   - `entity/` - StandardEntity（审计字段）、OperateContext/Operator
   - `exception/` - BusinessException + ErrorCode 枚举与工厂
+  - `util/` - 通用工具（date.util、password-encrypt）
 - **src/modules/** - 业务模块（参考 user 模块结构）：
   `xxx.controller.ts` + `xxx.service.ts` + `xxx.repository.ts` + `entity/`（库表实体 + querydecoder + queryfilter）+ `dto/`
 - **src/config/config.yml** - 全部运行配置
 
 ### 请求流
 
-Fastify → RequestLogger → JwtAuthGuard/RolesGuard → ValidationPipe → Controller → Service（抛 BusinessException）→ ResponseInterceptor 包装 `{code, message, data}` → HttpExceptionFilter 兜底
+Fastify → JwtAuthGuard/RolesGuard → 拦截器前置（RequestLogger 等）→ ValidationPipe → Controller → Service（抛 BusinessException）→ 拦截器后置（ResponseInterceptor 包装 `{code, message, data}`）→ HttpExceptionFilter 兜底
+
+（即 Nest 实际执行序：middleware → guards → interceptors(前) → pipes → controller → interceptors(后) → filters）
 
 ### 路由约定
 

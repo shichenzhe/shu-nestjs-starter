@@ -98,6 +98,7 @@ auth:
   global: true
   defaultStrategy: jwt
   jwt:
+    # 生产部署前必须先执行 npm run init 替换默认密钥
     secret: '{{JWT_SECRET}}'
     expiresIn: '30m'
     refreshExpiresIn: '12h'
