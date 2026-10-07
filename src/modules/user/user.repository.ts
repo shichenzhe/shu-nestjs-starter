@@ -133,21 +133,6 @@ export class UserRepository {
   }
 
   /**
-   * 检查用户是否已分配课程
-   */
-  async hasAssignedCourse(userId: string): Promise<boolean> {
-    const teacherCourseCount = await this.prisma.courseTeacher.count({
-      where: { teacherId: userId },
-    });
-
-    const studentCourseCount = await this.prisma.courseStudent.count({
-      where: { studentId: userId },
-    });
-
-    return teacherCourseCount > 0 || studentCourseCount > 0;
-  }
-
-  /**
    * 更新用户密码
    */
   async changePassword(

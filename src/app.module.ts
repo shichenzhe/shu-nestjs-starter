@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common';
 import { PrismaModule } from './commons/database/prisma.module';
 import { ClsModule } from 'nestjs-cls';
 import { UserModule } from './modules/user/user.module';
-import { CourseModule } from './modules/course/course.module';
-import { AttendanceModule } from './modules/attendance/attendance.module';
 import { AuthModule } from './commons/auth/auth.module';
 import { AuthModule as AuthControllerModule } from './modules/auth/auth.module';
 import { OptionService } from './modules/option/option.service';
@@ -22,9 +20,6 @@ import { HealthModule } from './commons/web/management/health/health.module';
 import { MetricsModule } from './commons/web/management/metrics/metrics.module';
 import { MetricsInterceptor } from './commons/web/management/metrics/metrics.interceptor';
 import { OperationLogModule } from './modules/operationlog/operation-log.module';
-import { TeacherModule } from './modules/teacher/teacher.module';
-import { StudentModule } from './modules/student/student.module';
-import { AdminModule } from './modules/admin/admin.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -42,11 +37,6 @@ import { AdminModule } from './modules/admin/admin.module';
     }),
     LogModule,
     UserModule,
-    CourseModule,
-    AttendanceModule,
-    TeacherModule,
-    StudentModule,
-    AdminModule,
     AuthModule.forRoot({ global: true }),
     AuthControllerModule,
     HealthModule,

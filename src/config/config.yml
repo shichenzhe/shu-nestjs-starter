@@ -5,7 +5,7 @@ app:
   # 上下文路径
   contextPath: /
   # 应用名称
-  name: main
+  name: '{{APP_NAME}}'
   # 压缩配置
   compression:
     enabled: true
@@ -45,7 +45,7 @@ management:
       slo:
         http.server.requests: 10ms,50ms,100ms,200ms,500ms,1s,2s,5s
     tags:
-      application: demo
+      application: '{{APP_NAME}}'
       service: backend
       version: 1.0.0
   # 安全配置
@@ -69,8 +69,8 @@ management:
 swagger:
   enabled: true
   path: /api-docs
-  title: Demo API
-  description: Demo API Documentation
+  title: '{{APP_NAME}} API'
+  description: '{{APP_NAME}} API Documentation'
   version: 1.0.0
 
 # 响应配置
@@ -98,7 +98,7 @@ auth:
   global: true
   defaultStrategy: jwt
   jwt:
-    secret: '3C4F4BD192D0489FE0632F0C11ACBF35'
+    secret: '{{JWT_SECRET}}'
     expiresIn: '30m'
     refreshExpiresIn: '12h'
 

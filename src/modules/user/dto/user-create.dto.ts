@@ -49,14 +49,4 @@ export class UserCreateDto {
   @IsOptional()
   @MaxLength(255, { message: '备注长度不能超过255位' })
   note: string;
-
-  @IsOptional()
-  @IsString({ message: '家长1须是字符串' })
-  @MaxLength(50, { message: '家长1长度不能超过50位' })
-  parents1?: string;
-
-  @IsOptional()
-  @IsString({ message: '家长2必须是字符串' })
-  @MaxLength(50, { message: '家长2长度不能超过50位' })
-  parents2?: string;
 }

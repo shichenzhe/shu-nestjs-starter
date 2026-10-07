@@ -19,9 +19,10 @@ import { ResponseConfig } from '../../config/response-config.entity';
  * @implements {NestInterceptor}
  */
 @Injectable()
-export class ResponseInterceptor<T>
-  implements NestInterceptor<T, ResponseDto<T>>
-{
+export class ResponseInterceptor<T> implements NestInterceptor<
+  T,
+  ResponseDto<T>
+> {
   constructor(private readonly configService: ConfigService) {}
   intercept(
     context: ExecutionContext,

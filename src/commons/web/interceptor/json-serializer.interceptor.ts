@@ -35,7 +35,7 @@ export class JsonSerializerInterceptor implements NestInterceptor {
 
     if (typeof obj === 'object') {
       const result = {} as Record<string, any>;
-      Object.keys(obj as Record<string, any>).forEach((key) => {
+      Object.keys(obj).forEach((key) => {
         const value = (obj as Record<string, any>)[key];
         result[key] = this.serializeObject(value);
       });

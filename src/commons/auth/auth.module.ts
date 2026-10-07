@@ -48,13 +48,10 @@ export class AuthModule {
           useFactory: (configService: ConfigService) => {
             const authConfig = configService.get<IAuthConfig>('auth');
             return {
-              secret:
-                options.jwtOptions?.secret ||
-                (authConfig?.jwt?.secret as string),
+              secret: options.jwtOptions?.secret || authConfig?.jwt?.secret,
               signOptions: {
                 expiresIn:
-                  options.jwtOptions?.expiresIn ||
-                  (authConfig?.jwt?.expiresIn as string),
+                  options.jwtOptions?.expiresIn || authConfig?.jwt?.expiresIn,
               },
             };
           },

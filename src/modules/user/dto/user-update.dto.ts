@@ -34,14 +34,4 @@ export class UserUpdateDto extends Entity {
   @IsOptional()
   @MaxLength(255, { message: '备注长度不能超过255位' })
   note: string;
-
-  @IsOptional()
-  @IsString({ message: '父亲姓名必须是字符串' })
-  @MaxLength(50, { message: '父亲姓名长度不能超过50位' })
-  parents1?: string;
-
-  @IsOptional()
-  @IsString({ message: '母亲姓名必须是字符串' })
-  @MaxLength(50, { message: '母亲姓名长度不能超过50位' })
-  parents2?: string;
 }

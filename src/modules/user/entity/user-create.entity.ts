@@ -38,14 +38,6 @@ export class UserCreateEntity extends StandardEntity {
   @Expose()
   note: string | null;
 
-  /** 家长1 */
-  @Expose()
-  parents1: string | null;
-
-  /** 家长2 */
-  @Expose()
-  parents2: string | null;
-
   /** 最后登录时间 */
   @Expose()
   lastLoginTime?: Date | null;
@@ -68,19 +60,5 @@ export class UserCreateEntity extends StandardEntity {
    */
   isAdmin(): boolean {
     return this.userType === UserType.admin;
-  }
-
-  /**
-   * 检查是否为教师
-   */
-  isTeacher(): boolean {
-    return this.userType === UserType.teacher;
-  }
-
-  /**
-   * 检查是否为学生
-   */
-  isStudent(): boolean {
-    return this.userType === UserType.student;
   }
 }

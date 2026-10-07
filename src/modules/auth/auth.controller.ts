@@ -64,7 +64,7 @@ export class AuthController {
    */
   @Post('changePassword')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserType.admin, UserType.teacher, UserType.student)
+  @Roles(UserType.admin, UserType.user)
   async changePassword(
     @Body() changePasswordDto: UserChangePasswordDto,
     @AccessContext() operateContext: OperateContext,
@@ -110,8 +110,6 @@ export class AuthController {
     entity.name = updateUserDto.name;
     entity.phone = updateUserDto.phone;
     entity.note = updateUserDto.note;
-    entity.parents1 = updateUserDto.parents1;
-    entity.parents2 = updateUserDto.parents2;
 
     const userEntity: UserEntity = await this.userService.update(
       entity,

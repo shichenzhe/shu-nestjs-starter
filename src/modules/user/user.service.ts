@@ -268,12 +268,6 @@ export class UserService {
       throw new ConflictException('admin用户不能删除');
     }
 
-    // 检查用户是否已分配课程
-    const hasAssignedCourses = await this.userRepository.hasAssignedCourse(id);
-    if (hasAssignedCourses) {
-      throw new ConflictException('当前用户已分配课程，不能删除');
-    }
-
     // 执行物理删除
     await this.userRepository.delete(id);
   }

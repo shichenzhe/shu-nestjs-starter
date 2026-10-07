@@ -15,10 +15,6 @@ export class UserUpdateEntity extends UpdateEntity {
   isActive: boolean;
   @Expose()
   note: string;
-  @Expose()
-  parents1?: string;
-  @Expose()
-  parents2?: string;
 
   static create(partial: Partial<any>): UserUpdateEntity {
     return plainToInstance(UserUpdateEntity, partial, {

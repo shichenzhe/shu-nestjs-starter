@@ -47,8 +47,7 @@ export class HealthController {
       const healthConfig: HealthConfig =
         managementConfig.health || HealthConfig.getDefault();
       const healthChecks: (() =>
-        | Promise<HealthIndicatorResult>
-        | HealthIndicatorResult)[] = [];
+        Promise<HealthIndicatorResult> | HealthIndicatorResult)[] = [];
 
       // 根据配置动态添加磁盘检查
       if (healthConfig.diskSpace.enabled) {

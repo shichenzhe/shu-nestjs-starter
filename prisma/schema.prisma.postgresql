@@ -4,35 +4,27 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  relationMode ="prisma"//不是用外键
+  relationMode = "prisma" //不使用外键
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id           String   @id @default(uuid())
-  username     String   @unique @db.VarChar(64)
-  passwordHash String   @map("password_hash") @db.VarChar(255)
-  name         String   @db.VarChar(128)
-  phone        String?  @db.VarChar(20)
-  userType     UserType @map("user_type")
-  isActive     Boolean  @default(true) @map("is_active")
-  note         String?  @db.VarChar(255)
-  email        String?  @db.VarChar(100)
-  parents1   String?  @map("parents1") @db.VarChar(100)
-  parents2   String?  @map("parents2") @db.VarChar(100)
+  id            String    @id @default(uuid())
+  username      String    @unique
+  passwordHash  String    @map("password_hash")
+  name          String
+  phone         String?
+  userType      UserType  @map("user_type")
+  isActive      Boolean   @default(true) @map("is_active")
+  note          String?
+  email         String?
   lastLoginTime DateTime? @map("last_login_time")
-  createdAt    DateTime @default(now()) @map("created_at")
-  creatorId String @map("creator_id")@db.VarChar(64)
-  creatorName String @map("creator_name")@db.VarChar(128)
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  updatorId String @map("updator_id")@db.VarChar(64)
-  updatorName String @map("updator_name")@db.VarChar(128)
-
-  // Relations
-  teacher CourseTeacher[] @relation("Teachers")
-  student     CourseStudent[]    @relation("Students")
-  studentAttendances AttendanceRecord[] @relation("StudentAttendances")
-  teacherAttendances AttendanceRecord[] @relation("TeacherAttendances")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  creatorId     String    @map("creator_id")
+  creatorName   String    @map("creator_name")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  updatorId     String    @map("updator_id")
+  updatorName   String    @map("updator_name")
 
   @@index([username])
   @@index([userType])
@@ -42,114 +34,16 @@ model User {
   @@map("user")
 }
 
-model Course {
-  id              String     @id @default(uuid())
-  name            String     @db.VarChar(100)
-  description     String?
-  courseType      CourseType @map("course_type")
-  totalSessions   Int?       @map("total_sessions")
-  durationMonths  Int?       @map("duration_months")
-  sessionDuration Int?       @map("session_duration")
-  price           Decimal?   @db.Decimal(10, 2)
-  isActive        Boolean    @default(true) @map("is_active")
-  createdAt    DateTime @default(now()) @map("created_at")
-  creatorId String @map("creator_id")@db.VarChar(64)
-  creatorName String @map("creator_name")@db.VarChar(128)
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  updatorId String @map("updator_id")@db.VarChar(64)
-  updatorName String @map("updator_name")@db.VarChar(128)
-  studentCount  Int?       @map("student_count")
-
-  teachers CourseTeacher[] @relation("CourseTeachers")
-  students CourseStudent[] @relation("CourseStudents")
-  attendanceRecords AttendanceRecord[] @relation("CourseAttendances")
-
-  @@index([name])
-  @@index([isActive])
-  @@map("course")
-}
-
-model CourseTeacher {
-  id         String   @id @default(uuid())
-  courseId   String   @map("course_id")
-  teacherId  String   @map("teacher_id")
-  createdAt    DateTime @default(now()) @map("created_at")
-  creatorId String @map("creator_id")@db.VarChar(64)
-  creatorName String @map("creator_name")@db.VarChar(128)
-
-  // Relations
-  course  Course @relation("CourseTeachers", fields: [courseId], references: [id])
-  teacher User   @relation("Teachers", fields: [teacherId], references: [id])
-
-  @@unique([courseId, teacherId])
-  @@index([courseId])
-  @@index([teacherId])
-  @@map("course_teacher")
-}
-
-model CourseStudent {
-  id            String   @id @default(uuid())
-  studentId     String   @map("student_id")
-  courseId      String   @map("course_id")
-  totalSessions Int      @default(0) @map("total_sessions")
-  usedSessions  Int      @default(0) @map("used_sessions")
-  startDate     DateTime @map("start_date") @db.Date
-  endDate       DateTime @map("end_date") @db.Date
-  createdAt    DateTime @default(now()) @map("created_at")
-  creatorId String @map("creator_id")@db.VarChar(64)
-  creatorName String @map("creator_name")@db.VarChar(128)
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  updatorId String @map("updator_id")@db.VarChar(64)
-  updatorName String @map("updator_name")@db.VarChar(128)
-
-  // Relations
-  course  Course @relation("CourseStudents", fields: [courseId], references: [id])
-  student User   @relation("Students", fields: [studentId], references: [id])
-
-  @@index([studentId])
-  @@index([courseId])
-  @@index([endDate])
-  @@map("course_student")
-}
-
-
-model AttendanceRecord {
-  id              String   @id @default(uuid())
-  studentId     String   @map("student_id")
-  courseId      String   @map("course_id")
-  teacherId       String   @map("teacher_id")
-  note            String?
-  attendanceDate DateTime @default(now()) @map("attendance_date")
-  startTime String @map("start_time")@db.VarChar(10)
-  endTime String @map("end_time")@db.VarChar(10)
-  createdAt    DateTime @default(now()) @map("created_at")
-  creatorId String @map("creator_id")@db.VarChar(64)
-  creatorName String @map("creator_name")@db.VarChar(128)
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  updatorId String @map("updator_id")
-  updatorName String @map("updator_name")
-  
-  course Course @relation("CourseAttendances", fields: [courseId], references: [id])
-  student User @relation("StudentAttendances", fields: [studentId], references: [id])
-  teacher User @relation("TeacherAttendances", fields: [teacherId], references: [id])
-
-  @@index([studentId])
-  @@index([courseId])
-  @@index([teacherId])
-  @@index([attendanceDate(sort: Desc)])
-  @@map("attendance_record")
-}
-
 model OperationLog {
-  id        String   @id @default(uuid())
-  userId    String   @map("user_id")
-  operation String   @db.VarChar(100)
-  details   Json?
-  ipAddress String?  @map("ip_address") @db.VarChar(45)
-  userAgent String?  @map("user_agent")
-  executionTime Int? @map("execution_time")
-  status    String   @default("SUCCESS") @db.VarChar(20)
-  createdAt DateTime @default(now()) @map("created_at")
+  id            String   @id @default(uuid())
+  userId        String   @map("user_id")
+  operation     String
+  details       Json?
+  ipAddress     String?  @map("ip_address")
+  userAgent     String?  @map("user_agent")
+  executionTime Int?     @map("execution_time")
+  status        String   @default("SUCCESS")
+  createdAt     DateTime @default(now()) @map("created_at")
 
   @@index([userId])
   @@index([createdAt(sort: Desc)])
@@ -159,13 +53,18 @@ model OperationLog {
   @@map("operation_log")
 }
 
-enum UserType {
-  admin
-  teacher
-  student
+model option {
+  id    Int    @id @default(autoincrement())
+  type  String
+  name  String
+  value String
+  note  String?
+
+  @@unique([type, name], map: "idx_option_type_name")
+  @@index([type], map: "option_type_index")
 }
 
-enum CourseType {
-  month_card
-  session_card
+enum UserType {
+  admin
+  user
 }

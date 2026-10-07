@@ -22,10 +22,6 @@ export class UserDto {
   @Expose()
   isActive: boolean;
   @Expose()
-  parents1: string | null;
-  @Expose()
-  parents2: string | null;
-  @Expose()
   createdAt: Date;
   @Expose()
   updatedAt: Date;

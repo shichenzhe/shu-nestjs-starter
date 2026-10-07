@@ -60,6 +60,7 @@ describe('JwtAuthService', () => {
     const validPayload: IJwtPayload = {
       sub: '123',
       username: 'testuser',
+      name: '测试用户',
       roles: ['user'],
     };
 
@@ -202,6 +203,7 @@ describe('JwtAuthService', () => {
     const expectedPayload: IJwtPayload = {
       sub: '123',
       username: 'testuser',
+      name: '测试用户',
       roles: ['user'],
       iat: 1640995200,
       exp: 1640998800,
