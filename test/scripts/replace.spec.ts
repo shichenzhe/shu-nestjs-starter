@@ -28,7 +28,10 @@ describe('replace 引擎', () => {
 
   it('替换占位符并返回被修改的文件', async () => {
     await mkdir(join(dir, 'src'));
-    await writeFile(join(dir, 'src', 'config.yml'), `name: '${PH('APP_NAME')}'`);
+    await writeFile(
+      join(dir, 'src', 'config.yml'),
+      `name: '${PH('APP_NAME')}'`,
+    );
     await writeFile(join(dir, 'README.md'), `author: ${PH('AUTHOR')}`);
 
     const changed = await applyPlaceholders(dir, {
