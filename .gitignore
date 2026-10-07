@@ -3,6 +3,12 @@
 /node_modules
 /build
 
+# 脚手架初始化记录（npm run init 生成）
+shu-init.json
+
+# 本地数据库
+prisma/local.db
+
 # Logs
 logs
 *.log
