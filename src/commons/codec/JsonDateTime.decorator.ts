@@ -11,13 +11,9 @@ export function JsonDateTime() {
     if (!params || params.value === undefined || params.value === null) {
       return params.value;
     }
-    if (DateUtil.isInvalidDate(params.value)) {
-      return null;
-    }
-
-    // 如果已经是Date对象，直接返回
+    // 如果已经是Date对象，校验有效性后直接返回
     if (params.value instanceof Date) {
-      return params.value;
+      return DateUtil.isInvalidDate(params.value) ? null : params.value;
     }
 
     // 处理字符串类型
